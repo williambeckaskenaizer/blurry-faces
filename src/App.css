@@ -27,13 +27,13 @@ body {
   background: rgba(210, 230, 255, 0.28);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  
+
   /* Soft outer shadow + thin bright glass edge highlight */
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-    
+
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   display: flex;
@@ -43,7 +43,7 @@ body {
 
 .window-header {
   /* Glass title bar with subtle top-to-bottom transparency gradient */
-  background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
   color: #ffffff;
   padding: 8px 12px;
   font-weight: 600;
@@ -198,11 +198,14 @@ button:active {
 
 .grain-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
   z-index: 10;
   mix-blend-mode: overlay;
-  opacity: 0; 
+  opacity: 0;
   transition: opacity 0.4s ease;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
@@ -213,30 +216,43 @@ button:active {
   backdrop-filter: sepia(0.25) saturate(1.3) contrast(1.05) brightness(0.98) hue-rotate(-5deg);
   -webkit-backdrop-filter: sepia(0.25) saturate(1.3) contrast(1.05) brightness(0.98) hue-rotate(-5deg);
 }
-.film-gold .grain-overlay { opacity: 0.2; }
+
+.film-gold .grain-overlay {
+  opacity: 0.2;
+}
 
 .film-portra .color-grade-overlay {
   backdrop-filter: sepia(0.1) saturate(1.05) contrast(0.95) brightness(1.0);
   -webkit-backdrop-filter: sepia(0.1) saturate(1.05) contrast(0.95) brightness(1.0);
 }
-.film-portra .grain-overlay { opacity: 0.12; }
+
+.film-portra .grain-overlay {
+  opacity: 0.12;
+}
 
 .film-fuji .color-grade-overlay {
   backdrop-filter: saturate(1.3) contrast(1.05) hue-rotate(5deg);
   -webkit-backdrop-filter: saturate(1.3) contrast(1.05) hue-rotate(5deg);
 }
-.film-fuji .grain-overlay { opacity: 0.18; }
+
+.film-fuji .grain-overlay {
+  opacity: 0.18;
+}
 
 .film-colorplus .color-grade-overlay {
   backdrop-filter: sepia(0.35) saturate(1.2) contrast(1.08) brightness(0.95);
   -webkit-backdrop-filter: sepia(0.35) saturate(1.2) contrast(1.08) brightness(0.95);
 }
-.film-colorplus .grain-overlay { opacity: 0.28; }
+
+.film-colorplus .grain-overlay {
+  opacity: 0.28;
+}
 
 .film-cinestill .color-grade-overlay {
   backdrop-filter: contrast(1.1) saturate(1.2) brightness(0.88) sepia(0.15) hue-rotate(-15deg);
   -webkit-backdrop-filter: contrast(1.1) saturate(1.2) brightness(0.88) sepia(0.15) hue-rotate(-15deg);
 }
+
 .film-cinestill .grain-overlay {
   opacity: 0.35;
   mix-blend-mode: color-burn;
@@ -245,7 +261,10 @@ button:active {
 .viewfinder-container.film-cinestill::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
   background: rgba(0, 40, 80, 0.2);
   mix-blend-mode: lighten;
@@ -265,13 +284,16 @@ button:active {
   --glass-opacity: 0.65;
   --glass: hsl(var(--hue) 65% 52% / var(--glass-opacity));
   --frame: 5px;
-  
+
   position: relative;
   isolation: isolate;
-  display: flex;             /* REQUIRED: Makes the window a flex container */
-  flex-direction: column;    /* REQUIRED: Stack titlebar and body vertically */
-  height: 100%;              /* REQUIRED: Fill parent (.desktop) height */
-  
+  display: flex;
+  /* REQUIRED: Makes the window a flex container */
+  flex-direction: column;
+  /* REQUIRED: Stack titlebar and body vertically */
+  height: 100%;
+  /* REQUIRED: Fill parent (.desktop) height */
+
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, system-ui, sans-serif;
   font-size: 13px;
   color: #1b1b1b;
@@ -323,11 +345,9 @@ button:active {
   min-height: 30px;
   border-radius: var(--radius) var(--radius) 0 0;
   /* faint self-contained brushed sheen */
-  background: repeating-linear-gradient(
-    108deg,
-    rgba(255, 255, 255, 0.05) 0 1px,
-    transparent 1px 5px
-  );
+  background: repeating-linear-gradient(108deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 5px);
 }
 
 .aero-window .aero-titlebar-icon {
@@ -378,13 +398,11 @@ button:active {
   border-right: 1px solid rgba(0, 0, 0, 0.28);
   color: rgba(0, 0, 0, 0.68);
   cursor: pointer;
-  background: linear-gradient(
-    rgba(255, 255, 255, 0.55),
-    rgba(255, 255, 255, 0.28) 46%,
-    rgba(0, 0, 0, 0.08) 50%,
-    rgba(0, 0, 0, 0.08) 78%,
-    rgba(255, 255, 255, 0.4)
-  );
+  background: linear-gradient(rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.28) 46%,
+      rgba(0, 0, 0, 0.08) 50%,
+      rgba(0, 0, 0, 0.08) 78%,
+      rgba(255, 255, 255, 0.4));
   transition: box-shadow 0.12s ease, background 0.12s ease, color 0.12s ease;
 }
 
@@ -402,6 +420,7 @@ button:active {
   background: currentColor;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
+
 .aero-window .aero-caption .max::before {
   content: "";
   width: 11px;
@@ -409,6 +428,7 @@ button:active {
   border: 1px solid currentColor;
   border-top-width: 2px;
 }
+
 .aero-window .aero-caption .close::before {
   content: "\2715";
   font-size: 11px;
@@ -423,6 +443,7 @@ button:active {
     linear-gradient(#c3e3f4 48%, #1f79b0 50%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 8px 2px rgba(93, 196, 240, 0.85);
 }
+
 .aero-window .aero-caption button:not(.close):active {
   background:
     radial-gradient(120% 90% at 50% 130%, #12e6e6, transparent 60%),
@@ -438,12 +459,14 @@ button:active {
     radial-gradient(circle at 130% 50%, rgba(0, 0, 0, 0.4) 6%, transparent 55%),
     linear-gradient(#e6a99f, #d16b5b 48%, #cf4b34 50%, #d8654c);
 }
+
 .aero-window .aero-caption .close:hover {
   background:
     radial-gradient(120% 90% at 50% 130%, #ff9a86, transparent 60%),
     linear-gradient(#ffc0b5 48%, #d40a0a 50%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 8px 2px rgba(255, 80, 48, 0.85);
 }
+
 .aero-window .aero-caption .close:active {
   background:
     radial-gradient(120% 90% at 50% 130%, #ff3a1a, transparent 60%),
@@ -460,11 +483,13 @@ button:active {
   border-bottom: 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
+
 .aero-window .aero-menubar span {
   padding: 4px 10px;
   cursor: default;
   color: #1b1b1b;
 }
+
 .aero-window .aero-menubar span:hover {
   background: linear-gradient(#eaf4fd, #cfe8fb);
   box-shadow: inset 0 0 0 1px #b5dcfb;
@@ -478,12 +503,16 @@ button:active {
   display: flex;
   flex-direction: column;
   /* position: relative; */
-  flex: 1;                 /* Grow to fill all remaining vertical space */
-  min-height: 0;           /* CRITICAL: Prevents flex items with scrollbars from overflowing */
-  overflow-y: auto;        /* Keeps your vertical scrolling active */
+  flex: 1;
+  /* Grow to fill all remaining vertical space */
+  min-height: 0;
+  /* CRITICAL: Prevents flex items with scrollbars from overflowing */
+  overflow-y: auto;
+  /* Keeps your vertical scrolling active */
   display: flex;
   flex-direction: column;
-  gap: 12px;               /* Optional: spaces out your group-boxes cleanly */
+  gap: 12px;
+  /* Optional: spaces out your group-boxes cleanly */
   /* min-height: 289px; */
   /* height:; */
   background: #f0f0f0;
@@ -493,6 +522,7 @@ button:active {
   white-space: pre-wrap;
   overflow: auto;
 }
+
 .aero-window .aero-body:last-child {
   margin-bottom: var(--frame);
   border-radius: 0 0 3px 3px;
@@ -514,9 +544,11 @@ button:active {
   border-radius: 0 0 3px 3px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
+
 .aero-window .aero-statusbar .aero-status-grow {
   flex: 1;
 }
+
 /* Resize gripper (bottom-right dots) */
 .aero-window .aero-statusbar .aero-gripper {
   width: 12px;
@@ -537,6 +569,7 @@ button:active {
     hsl(var(--hue) 14% 84%);
   opacity: 0.82;
 }
+
 .aero-window.inactive .aero-titlebar-text {
   color: #5a5a5a;
   text-shadow: 0 0 4px #fff, 0 0 6px #fff;
@@ -606,6 +639,7 @@ button:active {
     opacity: 0;
     transform: scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -626,7 +660,8 @@ button:active {
   flex: 1;
   padding: 12px;
   gap: 12px;
-  min-height: 0; /* Crucial for vertical flex containers */
+  min-height: 0;
+  /* Crucial for vertical flex containers */
   position: relative;
 }
 
@@ -635,7 +670,7 @@ button:active {
   width: 280px;
   flex-shrink: 0;
   /* Smooth Windows 7 Aero scale and slide transition */
-  transition: 
+  transition:
     width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
     margin 0.35s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.25s ease,
@@ -648,7 +683,8 @@ button:active {
 /* Minimized state: collapses width to 0 while sliding into the taskbar */
 .sidebar.minimized {
   width: 0;
-  margin-right: -12px; /* Cancels out workspace gap */
+  margin-right: -12px;
+  /* Cancels out workspace gap */
   padding: 0;
   opacity: 0;
   transform: scale(0.2) translateY(100px);
@@ -669,7 +705,7 @@ button:active {
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-top: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     0 -3px 12px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -684,18 +720,44 @@ button:active {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20; /* Ensures it sits above color overlays (z-index 5-11) */
-  
+  z-index: 20;
+  /* Ensures it sits above color overlays (z-index 5-11) */
+
   width: auto;
   min-width: 70px;
   min-height: 70px;
   padding: 8px 24px;
   margin: 0;
-  border-radius: 80px; /* Win7 pill-button style */
-  
-  box-shadow: 
+  border-radius: 80px;
+  /* Win7 pill-button style */
+
+  box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.windows-orb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, #52b0ff 0%, #0052cc 70%, #002b80 100%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 0 10px rgba(0, 140, 255, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.windows-orb:hover {
+  box-shadow:
+    0 0 15px rgba(100, 200, 255, 1),
+    inset 0 1px 4px rgba(255, 255, 255, 1);
+  transform: scale(1.05);
 }
 
 /* --- CUSTOM START ORB ICON --- */
@@ -703,20 +765,20 @@ button:active {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  
+
   /* Link to your saved image file */
   background-image: url('./assets/chjbP.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  
+
   /* Aero glass glow background & outer shadow */
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 
+  box-shadow:
     0 0 10px rgba(0, 140, 255, 0.6),
     inset 0 1px 2px rgba(255, 255, 255, 0.8);
-    
+
   cursor: pointer;
   margin-right: 8px;
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
@@ -726,7 +788,7 @@ button:active {
 .start-orb:hover {
   transform: scale(1.1);
   filter: brightness(1.15);
-  box-shadow: 
+  box-shadow:
     0 0 16px rgba(100, 200, 255, 1),
     inset 0 1px 4px rgba(255, 255, 255, 1);
 }
@@ -747,7 +809,7 @@ button:active {
   font-size: 12px;
   color: #ffffff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  background: linear-gradient(to bottom, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 50%, rgba(0,0,0,0.1) 51%, rgba(255,255,255,0.15) 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.1) 51%, rgba(255, 255, 255, 0.15) 100%);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
   cursor: pointer;
@@ -755,13 +817,13 @@ button:active {
 }
 
 .taskbar-item:hover {
-  background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%);
   border-color: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 8px rgba(180, 220, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .taskbar-item.active {
-  background: linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, rgba(160,210,255,0.25) 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45) 0%, rgba(160, 210, 255, 0.25) 100%);
   border-color: rgba(255, 255, 255, 0.7);
   box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.6);
 }
@@ -825,7 +887,7 @@ button:active {
   border-radius: 2px;
   background: linear-gradient(to bottom, #ffffff 0%, #e3e3e3 50%, #d8d8d8 51%, #f0f0f0 100%);
   border: 1px solid #707070;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   cursor: pointer;
@@ -845,7 +907,7 @@ button:active {
   border-radius: 2px;
   background: linear-gradient(to bottom, #ffffff 0%, #e3e3e3 50%, #d8d8d8 51%, #f0f0f0 100%);
   border: 1px solid #707070;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   cursor: pointer;
@@ -867,18 +929,18 @@ button:active {
   font-family: inherit;
   font-size: 12px;
   color: #1a1a1a;
-  
+
   /* Classic Win7 subtle split gradient */
   background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 48%, #e3e3e3 50%, #e8e8e8 100%);
   border: 1px solid #adadad;
   border-radius: 3px;
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 1px 2px rgba(0, 0, 0, 0.05);
-    
+
   outline: none;
   cursor: pointer;
-  
+
   /* Custom SVG dropdown arrow */
   appearance: none;
   -webkit-appearance: none;
@@ -886,14 +948,14 @@ button:active {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%23333333' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
-  
+
   transition: all 0.15s ease;
 }
 
 .aero-select:hover {
   background: linear-gradient(to bottom, #ffffff 0%, #f3f8fd 48%, #e5f3ff 50%, #eaf4fd 100%);
   border-color: #3c7fb1;
-  box-shadow: 
+  box-shadow:
     0 0 5px rgba(60, 127, 177, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }

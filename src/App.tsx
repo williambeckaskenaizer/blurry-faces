@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import scarySound from './assets/scary.mp3';
 import notification from './assets/notification.mp3';
+import pop from './assets/pop.mp3';
+import transform from './assets/transform.mp3';
 import { HistogramHUD } from './components/Histogram';
 
 
@@ -53,6 +55,7 @@ export default function App() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showHistogram, setShowHistogram] = useState(true);
   const [exposureStep, setExposureStep] = useState<number>(0);
+  const [numberOfClicks, setNumberOfClicks] = useState<number>(0);
 
   const [isCooldown, setIsCooldown] = useState(false);
   const cooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -63,6 +66,27 @@ export default function App() {
     const sign = step > 0 ? "+" : "";
     return `${sign}${ev.toFixed(1)} EV`;
   };
+
+  const updateNumberOfClicks = () => {
+    if (numberOfClicks == 4) {
+      playSound(scarySound);
+      setNumberOfClicks(numberOfClicks + 1);
+      return;
+    } else if (numberOfClicks < 3) {
+      console.log("click!");
+      playSound(pop);
+      setNumberOfClicks(numberOfClicks + 1);
+      return;
+    }
+    else if (numberOfClicks >= 4) {
+      playSound(pop);
+      setNumberOfClicks(0);
+      return;
+    } else {
+      playSound(transform, 0.2);
+      setNumberOfClicks(numberOfClicks + 1);
+    }
+  }
 
   const exposureBrightness = Math.pow(2, exposureStep / 3);
 
@@ -89,22 +113,16 @@ export default function App() {
     setShowClosePopup(false);
   };
 
-  const playScaryChiblee = () => {
-    const audio = new Audio(scarySound);
+  const playSound = (soundName: string, volume?: number) => {
+    const audio = new Audio(soundName);
+    audio.volume = volume || 1;
     audio.play().catch((error) => {
       console.error("Playback failed or was blocked by browser permissions:", error);
     });
-  };
-
-  const playNotification = () => {
-    const audio = new Audio(notification);
-    audio.play().catch((error) => {
-      console.error("Playback failed or was blocked by browser permissions:", error);
-    });
-  };
+  }
 
   const popupNotification = () => {
-    playNotification();
+    playSound(notification);
     setShowClosePopup(true);
   }
 
@@ -142,32 +160,48 @@ export default function App() {
   }, []);
 
   const dropInCity = (cityName: keyof typeof CITIES) => {
-
     if (isCooldown) return;
-
     setIsCooldown(true);
-
     if (!streetView) return;
-    setActiveCity(cityName)
+    setActiveCity(cityName);
+
     const svService = new google.maps.StreetViewService();
     const cityCoords = CITIES[cityName];
-    const randomLat = cityCoords.lat + (Math.random() - 0.5) * 0.1;
-    const randomLng = cityCoords.lng + (Math.random() - 0.5) * 0.1;
 
-    svService.getPanorama(
-      {
-        location: { lat: randomLat, lng: randomLng },
-        radius: 10000,
-        source: google.maps.StreetViewSource.OUTDOOR,
-      },
-      (data, status) => {
-        if (status === "OK" && data?.location?.latLng) {
-          streetView.setPosition(data.location.latLng);
-        } else {
-          streetView.setPosition(cityCoords);
+    // Recursive helper to attempt finding a random location multiple times
+    const tryFindLocation = (attemptsLeft: number) => {
+      // 1. Increase the offset spread using circular distribution (max ~25km away)
+      const maxOffsetDegrees = 0.25;
+      const radius = Math.random() * maxOffsetDegrees;
+      const angle = Math.random() * 2 * Math.PI;
+
+      const randomLat = cityCoords.lat + radius * Math.cos(angle);
+      const randomLng = cityCoords.lng + radius * Math.sin(angle);
+
+      svService.getPanorama(
+        {
+          location: { lat: randomLat, lng: randomLng },
+          // 2. Shrink search radius so it doesn't just snap back to the city center
+          radius: 1000,
+          source: google.maps.StreetViewSource.OUTDOOR,
+        },
+        (data, status) => {
+          if (status === "OK" && data?.location?.latLng) {
+            streetView.setPosition(data.location.latLng);
+          } else {
+            // 3. If no panorama is found, retry instead of instantly falling back to default
+            if (attemptsLeft > 0) {
+              tryFindLocation(attemptsLeft - 1);
+            } else {
+              console.warn(`Could not find a random location in ${cityName} after retries. Falling back to center.`);
+              streetView.setPosition(cityCoords);
+            }
+          }
         }
-      }
-    );
+      );
+    };
+
+    tryFindLocation(4);
 
     if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
     cooldownTimerRef.current = setTimeout(() => {
@@ -224,6 +258,7 @@ export default function App() {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = "high";
 
+        // 1. Build the film stock filter string
         let filterStr = "none";
         if (activeFilm === "Kodak Gold 200") filterStr = "sepia(0.25) saturate(1.3) contrast(1.05) brightness(0.98) hue-rotate(-5deg)";
         else if (activeFilm === "Kodak Portra 400") filterStr = "sepia(0.1) saturate(1.05) contrast(0.95) brightness(1.0)";
@@ -231,9 +266,12 @@ export default function App() {
         else if (activeFilm === "Colorplus 200") filterStr = "sepia(0.35) saturate(1.2) contrast(1.08) brightness(0.95)";
         else if (activeFilm === "CineStill 800T") filterStr = "contrast(1.1) saturate(1.2) brightness(0.88) sepia(0.15) hue-rotate(-15deg)";
 
-        ctx.filter = filterStr;
+        // 2. DENOISING PASS: Combine sub-pixel blur with the film filter to eliminate JPEG noise
+        // blur(0.7px) removes pixelation/artifacts from Google's 640px image during 2x scaling
+        ctx.filter = `blur(0.7px) ${filterStr !== "none" ? filterStr : ""}`;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+        // 3. CineStill halogen overlay (if active)
         if (activeFilm === "CineStill 800T") {
           ctx.filter = "none";
           ctx.globalCompositeOperation = "lighten";
@@ -241,6 +279,7 @@ export default function App() {
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
+        // 4. Synthetic film grain overlay (applied sharp ON TOP of denoised image)
         if (showGrain && activeFilm !== "None") {
           let opacity = 0.2;
           if (activeFilm === "Kodak Gold 200") opacity = 0.2;
@@ -266,7 +305,7 @@ export default function App() {
           });
         }
 
-        // Trigger clean download
+        // Trigger download
         const finalImgUrl = canvas.toDataURL("image/jpeg", 0.95);
         const link = document.createElement("a");
         link.href = finalImgUrl;
@@ -348,7 +387,7 @@ export default function App() {
             <div className="group-box" data-title="Locations">
               {Object.keys(CITIES).map((city) => (
                 <button disabled={isCooldown} style={{ fontWeight: activeCity === city ? 'bold' : 'normal' }} className='inner-button' key={city} onClick={() => dropInCity(city as keyof typeof CITIES)}>
-                  {city}  {activeCity === city && '◄'} {(isCooldown && activeCity == city) && "⏳"} 
+                  {city}  {activeCity === city && '◄'} {(isCooldown && activeCity == city) && "⏳"}
                 </button>
               ))}
             </div>
@@ -377,7 +416,7 @@ export default function App() {
                     {/* Handles both string labels and object metadata ({ name: 'Kodak Gold 200' }) */}
                     {typeof value === 'object' && value !== null && 'name' in value
                       ? (value as { name: string }).name
-                      : String(key)} 
+                      : String(key)}
                   </option>
                 ))}
               </select>
@@ -475,8 +514,16 @@ export default function App() {
       </div>
 
       <div className="aero-taskbar">
-        <div onClick={playScaryChiblee} className="start-orb" title="Start">
-        </div>
+        {(numberOfClicks >= 4) && <div onClick={() => updateNumberOfClicks()} className="start-orb" title="Start">
+        </div>}
+        {(numberOfClicks < 4) && <div onClick={() => updateNumberOfClicks()} className="windows-orb" title="Start">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M1 2.5L7 1.5V7.5H1V2.5Z" fill="#F25022" />
+            <path d="M8 1.3L15 0.3V7.5H8V1.3Z" fill="#7FBA00" />
+            <path d="M1 8.5H7V14.5L1 13.5V8.5Z" fill="#00A4EF" />
+            <path d="M8 8.5H15V15.7L8 14.7V8.5Z" fill="#FFB900" />
+          </svg>
+        </div>}
 
         <div
           className={`taskbar-item ${showSidebar ? 'active' : 'minimized'}`}
