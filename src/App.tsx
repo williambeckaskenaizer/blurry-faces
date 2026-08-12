@@ -48,7 +48,7 @@ export default function App() {
   const [streetView, setStreetView] = useState<google.maps.StreetViewPanorama | null>(null);
   const [activeLens, setActiveLens] = useState("35mm");
   const [activeFilm, setActiveFilm] = useState("film-gold");
-  const [showGrain, setShowGrain] = useState(false);
+  // const [showGrain, setShowGrain] = useState(false);
   const [showClosePopup, setShowClosePopup] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showHistogram, setShowHistogram] = useState(true);
