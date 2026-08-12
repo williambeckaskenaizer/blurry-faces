@@ -48,11 +48,14 @@ export default function App() {
   const [streetView, setStreetView] = useState<google.maps.StreetViewPanorama | null>(null);
   const [activeLens, setActiveLens] = useState("35mm");
   const [activeFilm, setActiveFilm] = useState("film-gold");
-  // const [showGrain, setShowGrain] = useState(false);
+  const [showGrain, setShowGrain] = useState(false);
   const [showClosePopup, setShowClosePopup] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showHistogram, setShowHistogram] = useState(true);
   const [exposureStep, setExposureStep] = useState<number>(0);
+
+  const [isCooldown, setIsCooldown] = useState(false);
+  const cooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const formatEV = (step: number): string => {
     const ev = step / 3;
@@ -139,6 +142,11 @@ export default function App() {
   }, []);
 
   const dropInCity = (cityName: keyof typeof CITIES) => {
+
+    if (isCooldown) return;
+
+    setIsCooldown(true);
+
     if (!streetView) return;
     setActiveCity(cityName)
     const svService = new google.maps.StreetViewService();
@@ -160,6 +168,11 @@ export default function App() {
         }
       }
     );
+
+    if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
+    cooldownTimerRef.current = setTimeout(() => {
+      setIsCooldown(false);
+    }, 1000);
   };
 
   const changeLens = (lensName: keyof typeof LENSES) => {
@@ -334,8 +347,8 @@ export default function App() {
           <div className="aero-body" style={{ overflowY: 'auto' }}>
             <div className="group-box" data-title="Locations">
               {Object.keys(CITIES).map((city) => (
-                <button style={{ fontWeight: activeCity === city ? 'bold' : 'normal' }} className='inner-button' key={city} onClick={() => dropInCity(city as keyof typeof CITIES)}>
-                  {city} {activeCity === city && '◄'}
+                <button disabled={isCooldown} style={{ fontWeight: activeCity === city ? 'bold' : 'normal' }} className='inner-button' key={city} onClick={() => dropInCity(city as keyof typeof CITIES)}>
+                  {city}  {activeCity === city && '◄'} {(isCooldown && activeCity == city) && "⏳"} 
                 </button>
               ))}
             </div>
@@ -364,13 +377,13 @@ export default function App() {
                     {/* Handles both string labels and object metadata ({ name: 'Kodak Gold 200' }) */}
                     {typeof value === 'object' && value !== null && 'name' in value
                       ? (value as { name: string }).name
-                      : String(key)}
+                      : String(key)} 
                   </option>
                 ))}
               </select>
             </div>
 
-            
+
 
             <div className="group-box" data-title="Display Settings">
               <div className="exposure-control">
@@ -401,14 +414,14 @@ export default function App() {
                   <span>+3</span>
                 </div>
               </div>
-                <label className="aero-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={showHistogram}
-                    onChange={(e) => setShowHistogram(e.target.checked)}
-                  />
-                  Show Histogram
-                </label>
+              <label className="aero-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={showHistogram}
+                  onChange={(e) => setShowHistogram(e.target.checked)}
+                />
+                Show Histogram
+              </label>
             </div>
 
             {/* <div className="group-box" data-title="Capture">
