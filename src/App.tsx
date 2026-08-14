@@ -479,9 +479,7 @@ export default function App() {
           <button className="shutter-btn overlay-shutter-btn" onClick={takePhoto}>
             📷
           </button>
-          <div style={{ position: 'absolute', bottom: '30px', left: '4%', transform: 'translateX(-50%)', zIndex: 20 }}>
-            {showHistogram && <HistogramHUD activeFilm={activeFilm} />}
-          </div>
+
 
 
 
@@ -502,9 +500,11 @@ export default function App() {
               className={`viewfinder-container ${FILM_STOCKS[activeFilm as keyof typeof FILM_STOCKS]}`}
               style={{ filter: `brightness(${exposureBrightness})` }}>
               <div id="map" ref={mapRef}></div>
-
               <div className="color-grade-overlay"></div>
               <div className="grain-overlay" style={{ display: showGrain ? 'block' : 'none' }}></div>
+              <div style={{ position: 'absolute', bottom: '30px', left: '10%', transform: 'translateX(-50%)', zIndex: 20 }}>
+                {showHistogram && <HistogramHUD activeFilm={activeFilm} />}
+              </div>
 
             </div>
 

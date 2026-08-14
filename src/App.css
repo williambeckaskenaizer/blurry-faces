@@ -650,7 +650,7 @@ button:active {
 .desktop-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
 }
@@ -969,4 +969,380 @@ button:active {
   background: #ffffff;
   color: #1a1a1a;
   padding: 4px;
+}
+
+/* --- RESPONSIVE DESIGN FOR MOBILE --- */
+
+@media (max-width: 768px) {
+  /* Desktop wrapper adjustments */
+  .desktop-wrapper {
+    height: 100dvh;
+    width: 100vw;
+    padding: 0;
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  /* Stack layout vertically on mobile */
+  .desktop-workspace {
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  /* Add a semi-transparent backdrop when sidebar is visible on mobile */
+  .desktop-workspace::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    transition: background 0.3s ease;
+    z-index: 900;
+  }
+
+  /* Show backdrop when sidebar is visible */
+  .sidebar:not(.minimized) ~ .map-window ~ .aero-taskbar ~ div::before,
+  .desktop-workspace:has(.sidebar:not(.minimized))::before {
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+  }
+
+  /* Sidebar becomes an overlay drawer on mobile */
+  .sidebar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85vw;
+    max-width: 320px;
+    height: auto;
+    max-height: 60vh;
+    z-index: 999;
+    box-shadow:
+      0 18px 44px rgba(0, 0, 0, 0.6),
+      0 0 26px hsl(210 90% 58% / 0.28),
+      0 0 0 1px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.95),
+      inset 0 0 30px rgba(255, 255, 255, 0.28);
+  }
+
+  /* When sidebar is minimized, hide it completely on mobile */
+  .sidebar.minimized {
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Viewfinder takes full space when sidebar is minimized */
+  .map-window {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+  /* Adjust aero window for smaller screens */
+  .aero-window {
+    --radius: 6px;
+    --frame: 4px;
+  }
+
+  /* Make titlebar text smaller on mobile */
+  .aero-window .aero-titlebar-text {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .aero-window .aero-titlebar-icon {
+    width: 14px;
+    height: 14px;
+    margin-top: 5px;
+  }
+
+  /* Adjust title bar height for mobile */
+  .aero-window .aero-titlebar {
+    min-height: 26px;
+    padding: 0 4px;
+    gap: 4px;
+  }
+
+  /* Make caption buttons smaller on mobile */
+  .aero-window .aero-caption button {
+    min-width: 26px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .aero-window .aero-caption button:last-child {
+    min-width: 42px;
+  }
+
+  /* Adjust body padding for mobile */
+  .aero-window .aero-body {
+    margin: 0 var(--frame);
+    padding: 6px;
+    gap: 10px;
+  }
+
+  /* Make buttons more touch-friendly on mobile */
+  .inner-button {
+    padding: 8px 10px;
+    font-size: 13px;
+    min-height: 44px;
+    /* Touch target minimum */
+  }
+
+  /* Adjust group box for mobile */
+  .group-box {
+    padding: 16px 8px 8px;
+    margin-top: 4px;
+  }
+
+  .group-box::before {
+    font-size: 10px;
+    top: -7px;
+    left: 10px;
+    padding: 0 4px;
+  }
+
+  /* Make select dropdowns taller on mobile */
+  .aero-select {
+    padding: 8px 26px 8px 8px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  /* Adjust slider for mobile */
+  .aero-slider {
+    height: 8px;
+    margin: 8px 0 2px;
+  }
+
+  .aero-slider::-webkit-slider-thumb {
+    width: 13px;
+    height: 20px;
+  }
+
+  .aero-slider::-moz-range-thumb {
+    width: 13px;
+    height: 20px;
+  }
+
+  /* Adjust exposure control */
+  .exposure-label {
+    font-size: 12px;
+  }
+
+  .exposure-value {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+
+  .exposure-ticks {
+    font-size: 10px;
+  }
+
+  /* Adjust checkbox labels */
+  .aero-checkbox-label {
+    font-size: 13px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 0;
+  }
+
+  .aero-checkbox-label input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+
+  /* Taskbar adjustments for mobile */
+  .aero-taskbar {
+    height: 44px;
+    padding: 0 6px;
+    gap: 4px;
+  }
+
+  .windows-orb {
+    width: 36px;
+    height: 36px;
+  }
+
+  .start-orb {
+    width: 36px;
+    height: 36px;
+  }
+
+  .taskbar-item {
+    height: 36px;
+    padding: 0 8px;
+    font-size: 11px;
+    flex: 0 1 auto;
+  }
+
+  /* Hide some taskbar text on very small screens */
+  @media (max-width: 480px) {
+    .taskbar-item span:last-child {
+      display: none;
+    }
+
+    .taskbar-item {
+      padding: 0 6px;
+    }
+  }
+
+  /* Adjust shutter button for mobile */
+  .overlay-shutter-btn {
+    min-width: 60px;
+    min-height: 60px;
+    padding: 6px 20px;
+    bottom: 60px;
+    /* Above taskbar */
+    font-size: 13px;
+  }
+
+  /* Dialog adjustments for mobile */
+  .aero-dialog {
+    width: 90vw;
+    max-width: 340px;
+    max-height: 80dvh;
+    overflow-y: auto;
+  }
+
+  .aero-dialog-body {
+    padding: 12px;
+  }
+
+  .aero-dialog-content {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .aero-dialog-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .aero-dialog-actions .dialog-btn {
+    min-width: 70px;
+    min-height: 40px;
+    font-size: 12px;
+  }
+
+  /* Ensure map fills properly on mobile */
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Adjust histogram position on mobile */
+  .viewfinder-container > div[style*="position: absolute"] {
+    bottom: 20px !important;
+    left: 8px !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra adjustments for very small screens */
+  
+  .desktop-workspace {
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .sidebar {
+    width: 90vw;
+    max-width: 300px;
+    max-height: 55vh;
+    /* Centered positioning maintained from parent media query */
+  }
+
+  .aero-window {
+    --frame: 3px;
+  }
+
+  .aero-window .aero-titlebar {
+    min-height: 24px;
+  }
+
+  .aero-window .aero-titlebar-text {
+    font-size: 11px;
+  }
+
+  .aero-window .aero-body {
+    padding: 4px;
+    gap: 8px;
+  }
+
+  .inner-button {
+    padding: 6px 8px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+
+  .aero-select {
+    min-height: 38px;
+  }
+
+  .group-box {
+    padding: 14px 6px 6px;
+    margin-top: 2px;
+  }
+
+  .aero-taskbar {
+    height: 42px;
+  }
+
+  .overlay-shutter-btn {
+    min-width: 50px;
+    min-height: 50px;
+    padding: 4px 16px;
+    font-size: 12px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .desktop-workspace {
+    flex-direction: row;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 40vw;
+    max-width: 300px;
+    height: auto;
+    max-height: calc(100dvh - 54px);
+    top: auto;
+    left: auto;
+    z-index: auto;
+  }
+
+  .map-window {
+    flex: 1;
+    width: auto;
+  }
+
+  .aero-taskbar {
+    height: 38px;
+  }
+
+  .taskbar-item span:last-child {
+    display: inline;
+  }
 }
